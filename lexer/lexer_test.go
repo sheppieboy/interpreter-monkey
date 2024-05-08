@@ -15,7 +15,10 @@ func TestNextToken(t *testing.T){
 	let result = add(five, ten);
 	!-/*5;
     5 < 10 > 5;
-	if else true false return`
+	if else true false return;
+	10 == 9;
+	10 != 9;
+	`
 
 	tests := []struct {
 		expectedType token.TokenType
@@ -74,6 +77,15 @@ func TestNextToken(t *testing.T){
 		{token.TRUE, "true"},
 		{token.FALSE, "false"},
 		{token.RETURN, "return"},
+		{token.SEMICOLON, ";"},
+		{token.INT, "10"},
+		{token.NOT_EQ, "=="},
+		{token.INT, "9"},
+		{token.SEMICOLON, ";"},
+		{token.INT, "10"},
+		{token.EQ, "!="},
+		{token.INT, "9"},
+		{token.SEMICOLON, ";"},
 		{token.EOF, ""},
 	}
 
