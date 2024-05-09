@@ -80,12 +80,10 @@ func (p *Parser) parseLetStatement()*ast.LetStatement{
 	}
 
 	//skip over expressiosn for now
-	if !p.currTokenIs(token.SEMICOLON){
+	for !p.currTokenIs(token.SEMICOLON){
 		p.nextToken()
 	}
 
-
-	fmt.Println(stmt)
 	return stmt
 }
 
@@ -121,7 +119,7 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement{
 	p.nextToken()
 
 	//skip over expressiosn for now
-	if !p.currTokenIs(token.SEMICOLON){
+	for !p.currTokenIs(token.SEMICOLON){
 		p.nextToken()
 	}
 	return stmt
@@ -132,9 +130,15 @@ func (p *Parser) parseExpressStatement() *ast.ExpressionStatement{
 
 	stmt.Expression = p.parseExpression(LOWEST)
 
+	if stmt.Expression == nil{
+		fmt.Println("NIL")
+		return nil
+	}
+
 	if p.peekTokenIs(token.SEMICOLON){
 		p.nextToken()
 	}
+	fmt.Println("called")
 	return stmt
 }
 
@@ -144,7 +148,6 @@ func (p *Parser) parseExpression(precedence int) ast.Expression{
 		return nil
 	}
 	leftExp := prefix()
-
 	return leftExp
 }
 
