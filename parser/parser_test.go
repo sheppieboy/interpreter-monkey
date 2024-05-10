@@ -21,7 +21,7 @@ func TestLetStatements(t *testing.T){
 		t.Fatalf("ParsePogram() returned nil")
 	}
 	if len(program.Statements) != 3{
-		t.Fatalf("program.Statements does not contain 3 statements. go=%d", len(program.Statements))
+		t.Fatalf("program.Statements does not contain 3 statements. got=%d", len(program.Statements))
 	}
 
 	tests := []struct{
@@ -83,7 +83,7 @@ func TestIdentifierExpression(t *testing.T){
 
 	//check if added to statements
 	if len(program.Statements) != 1 {
-		t.Fatalf("program has not enough statements. go=%d", len(program.Statements))
+		t.Fatalf("program has not enough statements. got=%d", len(program.Statements))
 	}
 
 	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
@@ -494,7 +494,7 @@ func TestIfElseExpression(t *testing.T) {
 }
 
 func TestFunctionLiteralParsing(t *testing.T){
-	input := `fn(x + y) { x + y}`
+	input := `fn(x, y) { x + y}`
 
 	l := lexer.New(input)
 	p := New(l)
@@ -532,6 +532,35 @@ func TestFunctionLiteralParsing(t *testing.T){
 		t.Fatalf("function body stmt is not ast.ExpressionStatement. got=%T", function.Body.Statements[0])
 	}
 	testInfixExpression(t, bodyStmt.Expression, "x", "+", "y")
+}
+
+func TestFunctionParameterParsing(t *testing.T){
+	tests := []struct {
+		input string
+		expectedParams []string
+	}{
+		{input: "fn(){};", expectedParams: []string{}},
+		{input: "fn(x){};", expectedParams: []string{"x"}},
+		{input: "fn(x, y, z){};", expectedParams: []string{"x", "y", "z"}},
+	}
+
+	for _, tt := range tests{
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParserErrors(t, p)
+
+		stmt := program.Statements[0].(*ast.ExpressionStatement)
+		function := stmt.Expression.(*ast.FunctionLiteral)
+
+		if len(function.Parameters) != len(tt.expectedParams){
+			t.Errorf("length parameters wrong. want%d, got=%d\n", len(tt.expectedParams), len(function.Parameters))
+		}
+
+		for i, ident := range tt.expectedParams{
+			testLiteralExpression(t, function.Parameters[i], ident)
+		}
+	}
 }
 
 // helper functions
