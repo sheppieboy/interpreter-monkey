@@ -239,6 +239,49 @@ func TestParsingInfixExpressions(t *testing.T){
 	}
 }
 
+func TestBoolean(t *testing.T){
+	tests := []struct {
+		input string
+		expectedBoolean bool
+	}{
+		{"true;", true},
+		{"false;", false},
+		{"true", true},
+	}
+
+	for _, tt := range tests{
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParserErrors(t, p)
+
+		//length of statements
+		if len(program.Statements) != 1{
+			t.Fatalf("program.Statements does not contain %d statements. got=%d\n", 1, len(program.Statements))
+		}
+
+		stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+
+		//type check of stmt
+		if !ok{
+			t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
+		}
+
+		boolean, ok := stmt.Expression.(*ast.Boolean)
+
+		//type check of expression
+		if !ok{
+			t.Fatalf("exp not *ast.Boolean. got=%T", stmt.Expression)
+		}
+
+		//boolean value check
+		if boolean.Value != tt.expectedBoolean{
+			t.Errorf("boolean.Value not %t. got %t", tt.expectedBoolean, boolean.Value)
+		}
+
+	}
+}
+
 func TestOperatorPrecedenceParsing(t *testing.T){
 	tests := []struct{
 		input string
