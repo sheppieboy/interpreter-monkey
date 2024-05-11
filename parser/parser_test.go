@@ -375,6 +375,18 @@ func TestOperatorPrecedenceParsing(t *testing.T){
 			"!(true == true)",
 			"(!(true == true))",
 		},
+		{
+			"a + add(b * c) + d",
+    		"((a + add((b * c))) + d)",
+		},
+		{
+			"add(a, b, 1, 2 * 3, 4 + 5, add(6, 7 * 8))",
+			"add(a, b, 1, (2 * 3), (4 + 5), add(6, (7 * 8)))",
+		},
+		{
+			"add(a + b + c * d / f + g)",
+			"add((((a + b) + ((c * d) / f)) + g))",
+		},
 	}
 
 	for _, tt := range tests{
@@ -599,6 +611,7 @@ func TestCallExpression(t *testing.T){
 	testInfixExpression(t, callExp.Arguments[1], 2, "*", 3)
 	testInfixExpression(t, callExp.Arguments[2], 4, "+", 5)
 }
+
 
 // helper functions
 
