@@ -563,6 +563,43 @@ func TestFunctionParameterParsing(t *testing.T){
 	}
 }
 
+func TestCallExpression(t *testing.T){
+	input := `add(1, 2 * 3, 4 + 5);`
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+
+	if len(program.Statements) != 1{
+		t.Fatalf("program.Statements has the incorrect number of statements. got=%d. expected=1", len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+
+	if !ok{
+		t.Fatalf("program.Statements[0] is not of type ast.ExpressionStatement. got=%T", stmt)
+	}
+
+	callExp, ok := stmt.Expression.(*ast.CallExpression)
+	
+	if !ok{
+		t.Fatalf("stmt.Expression is not of type ast.CallExpression. got=%T", callExp)
+	}
+
+	if !testIdentifier(t, callExp.Function, "add"){
+		return 
+	}
+
+	if len(callExp.Arguments) != 3{
+		t.Fatalf("wrong length of arguments. got=%d", len(callExp.Arguments))
+	}
+
+	testLiteralExpression(t, callExp.Arguments[0], 1)
+	testInfixExpression(t, callExp.Arguments[1], 2, "*", 3)
+	testInfixExpression(t, callExp.Arguments[2], 4, "+", 5)
+}
+
 // helper functions
 
 func testLetStatement( t *testing.T, s ast.Statement, name string) bool {
