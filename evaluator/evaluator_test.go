@@ -176,7 +176,7 @@ func TestErrorHandling(t *testing.T){
 			
 			"foobar",
 			"identifier not found: foobar",
-			
+
 		},
 	}
 	for _, tt := range tests{
@@ -216,7 +216,9 @@ func testEval(input string) object.Object{
 	l := lexer.New(input)
 	p := parser.New(l)
 	program := p.ParseProgram()
-	return Eval(program)
+	env := object.NewEnvironment()
+
+	return Eval(program, env)
 }
 
 func testNullObject(t *testing.T, obj object.Object) bool {
