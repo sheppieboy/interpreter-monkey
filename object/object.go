@@ -14,6 +14,7 @@ type ObjectType string
 const (
 	INTEGER_OBJ = "INTEGER"
 	BOOOLEAN_OBJ = "BOOLEAN"
+	NULL_OBJ = "NULL"
 )
 
 func (i *Integer) Type() ObjectType {
@@ -29,5 +30,14 @@ func (b *Boolean) Type() ObjectType {
 
 func (b *Boolean) Inspect() string {
 	return fmt.Sprintf("%t", b.Value)
+}
+
+type Null struct{}
+
+func (n *Null) Type() ObjectType{
+	return NULL_OBJ
+}
+func(n *Null) Inspect() string {
+	return "null"
 }
 
