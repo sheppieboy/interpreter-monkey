@@ -47,6 +47,15 @@ func TestEvalBooleanExpression(t *testing.T){
 		{"1 == 1", true},
 		{"1 == 2", false},
 		{"1 != 2", true},
+		{"true == true", true},
+		{"false == false", true},
+		{"true == false", false},
+		{"true != false", true},
+		{"false != true", true},
+		{"(1 < 2) == true", true},
+		{"(1 < 2) == false", false},
+		{"(1 > 2) == true", false},
+		{"(1 > 2) == false", true},
 	}
 
 	for _, tt := range tests{
@@ -100,7 +109,7 @@ func testBooleanObject(t *testing.T, obj object.Object, expected bool) bool {
 	result, ok := obj.(*object.Boolean)
 
 	if !ok {
-		t.Errorf("object is not Boolean. got=%T (%+v)", obj, obj)
+		t.Fatalf("object is not Boolean. got=%T (%+v)", obj, obj)
 	}
 	if result.Value != expected{
 		t.Errorf("object has wrong value. got=%t, want=%t", result.Value, expected)
