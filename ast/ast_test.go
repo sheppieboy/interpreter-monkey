@@ -5,7 +5,6 @@ import (
 	"testing"
 )
 
-// let myVar = anotherVar;
 func TestString(t *testing.T){
 	program := &Program{Statements: []Statement{
 		&LetStatement{
