@@ -309,6 +309,7 @@ func TestBuiltinFunctions(t *testing.T){
 		{`len(1)`, "argument to `len` not supported, got=INTEGER"},
 		{`len("one", "two")`, "wrong number of arguments. got=2, want=1"},
 		{`len([1, 2, 3])`, 3},
+		{`let arr = [1,2,3,4]; len(arr);`, 4},
 		{`len([])`, 0},
 		{`puts("hello", "world!")`, nil},
 		{`first([1, 2, 3])`, 1},
@@ -361,73 +362,6 @@ func TestBuiltinFunctions(t *testing.T){
 	}
 }
 
-// func TestArrayBuiltinFunctions(t *testing.T){
-// 	tests := []struct{
-// 		input string
-// 		expected interface{}
-// 	}{
-// 		{
-// 			`let arr = [1, 2, 3]; len(arr);`,
-// 			3,
-// 		},
-// 		{
-// 			`len([1,2]);`,
-// 			2,
-// 		},
-// 		{
-// 			`len([])`,
-// 			0,
-// 		},
-// 		{
-// 			`let arr = [1,2,3]; first(arr);`,
-// 			1,
-// 		},
-// 		{
-// 			`first([1, 2]);`, 
-// 			1,
-// 		},
-// 		{
-// 			`first([]);`,
-// 			nil,
-// 		},
-// 		{
-// 			`first([true, false])`,
-// 			true,
-// 		},
-// 		{
-// 			`let arr = [1, false, 2]; last(arr)`,
-// 			2,
-// 		},
-// 		{
-// 			`last([1,2, 3])`,
-// 			3,
-// 		},
-// 		{
-// 			`last([false, 1, true]);`,
-// 			true,
-// 		},
-// 		{
-// 			`last([])`,
-// 			nil,
-// 		},
-// 		{
-// 			`last([1,2, 3])`,
-// 			3,
-// 		},
-		
-// 	}
-
-// 	for _, tt := range tests {
-// 		evaluated := testEval(tt.input)
-
-// 		switch expected := tt.expected.(type){
-// 		case int:
-// 			testIntegerObject(t, evaluated, int64(expected))
-// 		case bool:
-// 			testBooleanObject(t, evaluated, expected)
-// 		}
-// 	}
-// }
 
 func TestArrayLiterals(t *testing.T){
 	input := `[1, 2 * 2, 3 + 3]`

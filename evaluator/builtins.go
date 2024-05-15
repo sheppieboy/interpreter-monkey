@@ -1,6 +1,9 @@
 package evaluator
 
-import "interpreter-monkey/object"
+import (
+	"fmt"
+	"interpreter-monkey/object"
+)
 
 var builtins = map[string]*object.Builtin{
 	"len": {
@@ -9,6 +12,8 @@ var builtins = map[string]*object.Builtin{
 				return newError("wrong number of arguments. got=%d, want=1", len(args))
 			}
 			switch arg := args[0].(type){
+			case *object.Array:
+				return &object.Integer{Value: int64(len(arg.Elements))}
 			case *object.String:
 				return &object.Integer{Value: int64(len(arg.Value))}
 			default:
@@ -87,6 +92,14 @@ var builtins = map[string]*object.Builtin{
 			copy(newElements, arr.Elements)
 			newElements[length] = args[1]
 			return &object.Array{Elements: newElements}
+		},
+	},
+	"puts": {
+		Fn: func(args ...object.Object) object.Object {
+			for _, arg := range args {
+				fmt.Println(arg.Inspect())
+			}
+			return NULL
 		},
 	},
 }
